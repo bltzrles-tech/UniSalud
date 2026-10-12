@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  DOCTOR
+  RECEPTIONIST
+  PATIENT
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  passwordHash String
+  role UserRole @default(PATIENT)
+  createAt DateTime @default(now())
+
+  doctor Doctor?
+  patient Patient?
+}
+
+model Specialy {
+  id Int @id @default(autoincrement())
+  name String @unique
+  doctors Doctor[]
+}
+
+model Doctor {
+  id Int @id @default(autoincrement())
+  userId Int @unique
+  licenseNumber String @unique
+  specialtyId Int 
+  
+  user User @relation(fields: [userId], references: [id])
+  specialty Specialy @relation(fields: [specialtyId], references: [id])
+  appointments Appointment[]
+}
+
+model Patient {
+  id             Int    @id @default(autoincrement())
+  userId         Int    @unique
+  documentNumber String @unique
+  phone          String?
+
+  user         User          @relation(fields: [userId], references: [id])
+  appointments Appointment[]
+}
+
+model Appointment {
+  id          Int               @id @default(autoincrement())
+  doctorId    Int
+  patientId   Int
+  scheduledAt DateTime
+  status      AppointmentStatus @default(SCHEDULED)
+  reason      String?
+  createdAt   DateTime          @default(now())
+
+  doctor  Doctor  @relation(fields: [doctorId], references: [id])
+  patient Patient @relation(fields: [patientId], references: [id])
+
+  @@index([doctorId, scheduledAt])
+  @@index([patientId, scheduledAt])
+}
