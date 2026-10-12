@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Centro Médico UNI
 
 Aplicación web del proyecto **Centro Médico UNI**, organizada en dos módulos principales: un frontend desarrollado con React y TypeScript, y un backend desarrollado con Node.js, Express y Prisma.
@@ -256,3 +257,6 @@ Los archivos `.env`, `node_modules/`, `dist/` y otros archivos locales o generad
 - El frontend tiene instalados Tailwind CSS 4 y su plugin de Vite; confirma que ambos estén configurados en `vite.config.ts` y en la hoja de estilos principal si vas a utilizar clases de Tailwind.
 - Antes de desplegar el sistema, configura variables de entorno seguras, manejo de errores, validación de datos, pruebas y una estrategia de migraciones de base de datos.
 - Actualiza este documento cuando se agreguen módulos, rutas, modelos, variables de entorno o instrucciones de despliegue.
+=======
+# UniSalud
+>>>>>>> 2f8225cfaa344e1e5d71fdab6e396f42ab0967e3
