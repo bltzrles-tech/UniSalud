@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Centro Médico UNI
 
 Aplicación web del proyecto **Centro Médico UNI**, organizada en dos módulos principales: un frontend desarrollado con React y TypeScript, y un backend desarrollado con Node.js, Express y Prisma.
