@@ -1,11 +1,14 @@
-# Centro Médico UNI
+# UniSalud: Sistema Integral de Gestión de Atención Médica Universitaria
 
-Aplicación web del proyecto **Centro Médico UNI**, organizada en dos módulos principales: un frontend desarrollado con React y TypeScript, y un backend desarrollado con Node.js, Express y Prisma.
+UniSalud es una aplicación web orientada a facilitar la gestión de la atención médica universitaria. Su objetivo es permitir que los estudiantes consulten los servicios médicos disponibles, revisen los horarios de atención y gestionen sus citas de manera organizada.
 
-> **Estado actual:** el backend dispone de una ruta inicial de comprobación (`GET /`) y el frontend conserva la pantalla inicial de Vite.
+El proyecto está organizado en dos módulos principales: un **frontend** desarrollado con React y TypeScript, y un **backend** desarrollado con Node.js, Express y Prisma, conectado a una base de datos PostgreSQL.
+
+> **Estado actual:** El backend dispone de una ruta inicial de comprobación (`GET /`) y el frontend conserva la pantalla inicial de Vite. La aplicación se encuentra en desarrollo.
 
 ## Tabla de contenidos
 
+- [Características](#características)
 - [Tecnologías](#tecnologías)
 - [Requisitos previos](#requisitos-previos)
 - [Estructura del proyecto](#estructura-del-proyecto)
@@ -13,249 +16,369 @@ Aplicación web del proyecto **Centro Médico UNI**, organizada en dos módulos 
 - [Variables de entorno](#variables-de-entorno)
 - [Ejecución en desarrollo](#ejecución-en-desarrollo)
 - [Comprobación del backend](#comprobación-del-backend)
-- [Compilación para producción](#compilación-para-producción)
 - [Base de datos y Prisma](#base-de-datos-y-prisma)
 - [Scripts disponibles](#scripts-disponibles)
-- [Control de versiones](#control-de-versiones)
-- [Notas de desarrollo](#notas-de-desarrollo)
+- [Flujo de trabajo con Git](#flujo-de-trabajo-con-git)
+- [Próximas funcionalidades](#próximas-funcionalidades)
+- [Autores](#autores)
+
+## Características
+
+La plataforma está diseñada para incorporar las siguientes funcionalidades:
+
+- Consulta de servicios médicos universitarios.
+- Visualización de horarios y disponibilidad de atención.
+- Solicitud y gestión de citas médicas.
+- Consulta del estado de las citas.
+- Cancelación de citas.
+- Administración de horarios y solicitudes de atención.
+- Gestión de usuarios y control de acceso según sus roles.
+
+Estas funcionalidades corresponden al alcance previsto del proyecto y se implementarán progresivamente.
 
 ## Tecnologías
 
 ### Frontend
 
-- **React 19**
-- **TypeScript**
-- **Vite**
-- **Tailwind CSS 4** (instalado; verifica que esté configurado en Vite y en los archivos CSS antes de usar sus clases)
-- **Oxlint** para análisis estático del código
+- **React:** construcción de interfaces de usuario.
+- **TypeScript:** tipado estático para JavaScript.
+- **Vite:** entorno de desarrollo y herramienta de construcción.
+- **Tailwind CSS:** diseño y estilización de interfaces.
+- **Oxlint:** análisis estático del código.
 
 ### Backend
 
-- **Node.js**
-- **TypeScript**
-- **Express 5**
-- **Prisma 7**
-- **PostgreSQL**
-- **`@prisma/adapter-pg`** y **`pg`** para la conexión con PostgreSQL
-- **`dotenv`** para cargar variables de entorno
+- **Node.js:** entorno de ejecución de JavaScript.
+- **Express 5:** desarrollo de la API.
+- **TypeScript:** desarrollo del backend con tipado estático.
+- **Prisma ORM:** definición del modelo de datos e interacción con la base de datos.
+- **PostgreSQL:** sistema de gestión de bases de datos relacionales.
+- **node-postgres (`pg`):** conexión con PostgreSQL.
+- **dotenv:** gestión de variables de entorno.
+
+### Herramientas complementarias
+
+- **Git:** control de versiones.
+- **GitHub:** alojamiento del repositorio y colaboración.
+- **Visual Studio Code:** entorno de desarrollo.
 
 ## Requisitos previos
 
-Instala o configura lo siguiente antes de iniciar el proyecto:
+Antes de instalar el proyecto, asegúrate de contar con las siguientes herramientas:
 
-- Node.js y npm.
-- Git.
-- PostgreSQL disponible para la aplicación.
-- Acceso al repositorio de GitHub.
+- [Node.js](https://nodejs.org/)
+- npm, incluido con Node.js.
+- [Git](https://git-scm.com/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Visual Studio Code](https://code.visualstudio.com/) (opcional).
 
-Las versiones utilizadas durante la preparación de esta documentación fueron Node.js `v24.21.0`, npm `11.19.0`, Prisma `7.10.0` y TypeScript `7.0.2` en el backend. Las versiones instaladas pueden cambiar según las dependencias y el entorno.
+Para comprobar las instalaciones, ejecuta los siguientes comandos en una terminal:
+
+```bash
+node -v
+npm -v
+git --version
+```
 
 ## Estructura del proyecto
 
+La organización general del repositorio es la siguiente:
+
 ```text
 Centro-Medico-UNI/
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── ...
+│
 ├── backend/
 │   ├── prisma/
 │   │   └── schema.prisma
 │   ├── src/
-│   │   ├── generated/
-│   │   │   └── prisma/
-│   │   ├── script.ts
-│   │   └── server.ts
+│   │   └── ...
 │   ├── prisma.config.ts
-│   ├── prisma7.config.ts
 │   ├── package.json
-│   └── tsconfig.json
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── assets/
-│   │   ├── App.tsx
-│   │   ├── App.css
-│   │   ├── index.css
-│   │   └── main.tsx
-│   ├── index.html
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── vite.config.ts
+│   └── ...
+│
+├── .gitignore
 └── README.md
 ```
 
-- `frontend/`: interfaz de usuario.
-- `backend/`: servidor HTTP, lógica del servidor y acceso a datos.
-- `backend/prisma/schema.prisma`: modelos de datos definidos con Prisma.
-- `backend/src/server.ts`: punto de entrada del servidor Express.
-- `backend/src/script.ts`: script independiente de prueba de acceso a datos.
-- `backend/src/generated/prisma/`: cliente generado por Prisma; no se debe editar manualmente.
+**Descripción de los directorios:**
+
+- `frontend/`: contiene la interfaz de usuario.
+- `frontend/src/`: contiene el código fuente del frontend.
+- `backend/`: contiene la API y la lógica del servidor.
+- `backend/src/`: contiene el código fuente del backend.
+- `backend/prisma/`: contiene el esquema de datos de Prisma.
+- `backend/prisma/schema.prisma`: define los modelos de la base de datos.
+- `backend/prisma.config.ts`: contiene la configuración de Prisma, según la versión utilizada.
+- `.gitignore`: especifica los archivos y directorios que Git debe excluir.
+- `README.md`: documenta el proyecto y sus instrucciones de uso.
+
+La estructura es referencial; los archivos pueden variar según el estado actual del repositorio.
 
 ## Instalación
 
-Clona el repositorio y entra en el proyecto:
+### 1. Clonar el repositorio
+
+Abre una terminal y ejecuta:
 
 ```bash
-git clone git@github.com:TerroncitoDev08/Centro-Medico-UNI.git
+git clone https://github.com/TerroncitoDev08/Centro-Medico-UNI.git
+```
+
+Ingresa al directorio del proyecto:
+
+```bash
 cd Centro-Medico-UNI
 ```
 
-Instala las dependencias de cada módulo por separado:
+### 2. Instalar las dependencias del frontend
 
 ```bash
-cd backend
-npm install
-
-cd ../frontend
+cd frontend
 npm install
 ```
+
+### 3. Instalar las dependencias del backend
+
+Desde el directorio raíz del proyecto:
+
+```bash
+cd ../backend
+npm install
+```
+
+Cada módulo tiene sus propias dependencias, por lo que deben instalarse por separado.
 
 ## Variables de entorno
 
-El backend carga variables de entorno mediante `dotenv`. Para conectar Prisma con PostgreSQL se utiliza `DATABASE_URL`.
+El backend necesita variables de entorno para configurar la conexión con PostgreSQL y otros parámetros de ejecución.
 
-Crea el archivo `backend/.env` y configura allí la URL de conexión de tu entorno local. No subas ese archivo al repositorio ni publiques contraseñas o credenciales.
+Crea un archivo `.env` dentro del directorio `backend/`:
 
-Ejemplo de formato, con valores ficticios:
-
-```dotenv
-DATABASE_URL="postgresql://USUARIO:CONTRASENA@HOST:PUERTO/NOMBRE_BASE?schema=public"
+```env
+DATABASE_URL="postgresql://USUARIO:CONTRASEÑA@localhost:5432/NOMBRE_BD?schema=public"
+PORT=3000
 ```
 
-Sustituye los valores por los de tu propia configuración. Este ejemplo documenta el formato; no representa credenciales reales ni garantiza que la conexión esté configurada en tu equipo.
+Reemplaza los valores de ejemplo por los datos de tu entorno local:
+
+- `USUARIO`: usuario de PostgreSQL.
+- `CONTRASEÑA`: contraseña del usuario.
+- `NOMBRE_BD`: nombre de la base de datos.
+- `PORT`: puerto en el que se ejecutará el servidor, si la aplicación utiliza esta variable.
+
+**Importante:** No subas el archivo `.env` al repositorio. Asegúrate de que esté incluido en `.gitignore`.
+
+Puedes proporcionar un archivo `.env.example` con valores ficticios para facilitar la configuración a otros desarrolladores:
+
+```env
+DATABASE_URL="postgresql://usuario:contraseña@localhost:5432/unisalud?schema=public"
+PORT=3000
+```
+
+El nombre de la base de datos y el puerto deben coincidir con la configuración real del proyecto.
 
 ## Ejecución en desarrollo
 
-Abre dos terminales, una para cada módulo.
+El frontend y el backend se ejecutan en terminales independientes.
 
 ### 1. Iniciar el backend
+
+Abre una terminal y ejecuta:
 
 ```bash
 cd backend
 npm run dev
 ```
 
-El servidor utiliza el puerto `3000` y debe quedar disponible en:
+El comando inicia el servidor en modo desarrollo, siempre que el script `dev` esté configurado en `backend/package.json`.
 
-`http://localhost:3000`
+Si el servidor utiliza el puerto `3000`, estará disponible en:
+
+```text
+http://localhost:3000
+```
 
 ### 2. Iniciar el frontend
 
-En otra terminal:
+Abre una segunda terminal desde el directorio raíz del proyecto:
 
 ```bash
 cd frontend
 npm run dev
 ```
 
-Vite mostrará en la terminal la dirección local en la que se sirve el frontend. Usa esa dirección para abrir la aplicación en el navegador.
+Vite mostrará la dirección local para acceder a la aplicación. Habitualmente es:
+
+```text
+http://localhost:5173
+```
+
+Abre la dirección que aparezca en la terminal para visualizar el frontend.
 
 ## Comprobación del backend
 
-Actualmente, el backend define una ruta de prueba:
+Actualmente, el backend dispone de una ruta inicial de comprobación:
 
-- **Método:** `GET`
-- **Ruta:** `/`
-- **URL local:** `http://localhost:3000/`
-
-La respuesta esperada es un objeto JSON similar a:
-
-```json
-{
-  "message": "API Centro Médico UNI funcionando"
-}
+```http
+GET /
 ```
 
-Esta ruta sirve para comprobar que el servidor está iniciado. No representa todavía una API completa del centro médico.
+Esta ruta permite verificar que el servidor responde a las solicitudes HTTP.
 
-## Compilación para producción
+Puedes comprobarla desde el navegador accediendo a:
 
-### Backend
-
-Desde `backend/`:
-
-```bash
-npm run build
+```text
+http://localhost:3000/
 ```
 
-El comando ejecuta TypeScript y genera los archivos compilados en `backend/dist/`.
-
-Para iniciar el backend compilado:
+También puedes utilizar una terminal:
 
 ```bash
-npm start
+curl http://localhost:3000/
+```
+
+La respuesta dependerá del contenido definido en la ruta principal del servidor.
+
+Esta comprobación valida la respuesta del servidor, pero no garantiza por sí sola que la conexión con PostgreSQL funcione correctamente.
+
+## Base de datos y Prisma
+
+El proyecto utiliza Prisma ORM para definir los modelos de datos y facilitar las operaciones sobre PostgreSQL.
+
+El esquema se encuentra en:
+
+```text
+backend/prisma/schema.prisma
+```
+
+Antes de ejecutar operaciones sobre la base de datos, verifica que:
+
+1. PostgreSQL esté instalado y en ejecución.
+2. La base de datos exista.
+3. La variable `DATABASE_URL` contenga los datos de conexión correctos.
+4. La configuración de Prisma corresponda a la versión instalada.
+
+### Comandos de Prisma
+
+Desde el directorio `backend/`, puedes consultar los comandos disponibles:
+
+```bash
+npx prisma --help
+```
+
+Para validar el esquema, si el comando es compatible con la configuración del proyecto:
+
+```bash
+npx prisma validate
+```
+
+Para generar el cliente de Prisma, si corresponde a la configuración utilizada:
+
+```bash
+npx prisma generate
+```
+
+Si el proyecto utiliza migraciones, estas deben crearse y aplicarse de acuerdo con el esquema y la configuración del entorno. No ejecutes migraciones sobre una base de datos compartida o importante sin verificar previamente sus efectos.
+
+## Scripts disponibles
+
+Los scripts se definen en los archivos `package.json` de cada módulo.
+
+Para consultarlos, ejecuta desde el directorio correspondiente:
+
+```bash
+npm run
 ```
 
 ### Frontend
 
-Desde `frontend/`:
+Los proyectos configurados con Vite suelen incluir scripts como:
 
 ```bash
+npm run dev
 npm run build
-```
-
-Este comando ejecuta la comprobación de TypeScript (`tsc -b`) y construye la aplicación con Vite. Los archivos resultantes se generan en `frontend/dist/`.
-
-Para previsualizar localmente la compilación:
-
-```bash
 npm run preview
 ```
 
-La previsualización no sustituye la configuración necesaria para desplegar la aplicación en un servidor de producción.
+La disponibilidad de cada comando depende del `package.json` del frontend.
 
-## Base de datos y Prisma
+### Backend
 
-El proyecto utiliza PostgreSQL y Prisma 7. El esquema actual se encuentra en `backend/prisma/schema.prisma` e incluye el modelo `User` con estos campos:
+El backend puede incluir scripts para desarrollo, compilación y ejecución. Consulta `backend/package.json` para utilizar los nombres exactos definidos en el proyecto.
 
-| Campo | Tipo | Descripción |
-|---|---|---|
-| `id` | `Int` | Identificador autoincremental y clave primaria. |
-| `email` | `String` | Correo electrónico. |
-| `password` | `String` | Contraseña almacenada como texto en el esquema actual. |
+## Flujo de trabajo con Git
 
-**Seguridad:** antes de usar este modelo en un entorno real, las contraseñas deben almacenarse mediante un algoritmo de hash apropiado, nunca como texto plano. También conviene establecer las restricciones de unicidad y validación que requiera la aplicación.
+Para revisar el estado de los archivos modificados:
 
-El esquema fue validado con Prisma 7.10.0. La configuración activa detectada por Prisma CLI es `backend/prisma7.config.ts`.
+```bash
+git status
+```
 
-No se incluyen aquí comandos de migración porque antes de documentarlos de forma definitiva hay que confirmar el flujo de migraciones y la configuración de Prisma que utilizará el equipo. Cuando se defina ese flujo, documenta los comandos correspondientes junto con el proceso para generar el cliente Prisma.
+Para agregar los cambios:
 
-## Scripts disponibles
+```bash
+git add .
+```
 
-### Backend (`backend/package.json`)
+Para crear un commit:
 
-| Comando | Función |
-|---|---|
-| `npm run dev` | Inicia el servidor con `tsx watch`, reiniciándolo al detectar cambios. |
-| `npm run build` | Compila el código TypeScript. |
-| `npm start` | Ejecuta `dist/server.js`. |
-| `npm test` | Actualmente devuelve un mensaje indicando que no hay pruebas configuradas. |
-| `npm run postinstall` | Intenta sincronizar las skills de Prisma durante la instalación. |
+```bash
+git commit -m "docs: actualizar README de UniSalud"
+```
 
-### Frontend (`frontend/package.json`)
+Para subir los cambios a la rama actual:
 
-| Comando | Función |
-|---|---|
-| `npm run dev` | Inicia el servidor de desarrollo de Vite. |
-| `npm run build` | Comprueba TypeScript y genera la compilación de producción. |
-| `npm run preview` | Sirve una previsualización de la compilación. |
-| `npm run lint` | Ejecuta Oxlint. |
+```bash
+git push
+```
 
-Ejecuta los comandos dentro de la carpeta correspondiente, `backend/` o `frontend/`, ya que la raíz del repositorio no tiene un `package.json` propio.
+Se recomienda utilizar mensajes de commit claros que describan el cambio realizado.
 
-## Control de versiones
+Ejemplos:
 
-Repositorio remoto:
+```bash
+git commit -m "feat: agregar módulo de citas"
+git commit -m "fix: corregir validación de horarios"
+git commit -m "docs: actualizar documentación del proyecto"
+git commit -m "refactor: reorganizar servicios del backend"
+```
 
-[https://github.com/TerroncitoDev08/Centro-Medico-UNI](https://github.com/TerroncitoDev08/Centro-Medico-UNI)
+## Próximas funcionalidades
 
-Los archivos `.env`, `node_modules/`, `dist/` y otros archivos locales o generados deben permanecer fuera del control de versiones según las reglas de `.gitignore`.
+Las siguientes funcionalidades forman parte de la evolución prevista del proyecto:
 
-## Notas de desarrollo
+- Diseño e implementación de la página de inicio de UniSalud.
+- Consulta de servicios médicos y horarios disponibles.
+- Formulario para solicitar citas.
+- Visualización del estado de las solicitudes.
+- Cancelación y gestión de citas.
+- Panel administrativo para gestionar horarios y solicitudes.
+- Implementación de endpoints para la API.
+- Integración del frontend con el backend.
+- Persistencia de datos mediante PostgreSQL y Prisma.
+- Validación de datos y manejo de errores.
+- Autenticación y autorización según los roles de usuario.
+- Pruebas de funcionamiento y validación de requisitos.
 
-- Instala las dependencias por separado en `backend/` y `frontend/`.
-- No subas archivos `.env`, contraseñas, tokens ni credenciales al repositorio.
-- El cliente generado por Prisma no debe modificarse manualmente.
-- El frontend tiene instalados Tailwind CSS 4 y su plugin de Vite; confirma que ambos estén configurados en `vite.config.ts` y en la hoja de estilos principal si vas a utilizar clases de Tailwind.
-- Antes de desplegar el sistema, configura variables de entorno seguras, manejo de errores, validación de datos, pruebas y una estrategia de migraciones de base de datos.
-- Actualiza este documento cuando se agreguen módulos, rutas, modelos, variables de entorno o instrucciones de despliegue.
-=======
-# UniSalud
->>>>>>> 2f8225cfaa344e1e5d71fdab6e396f42ab0967e3
+La implementación de estas funcionalidades debe priorizar la integridad de las reservas, el control de acceso y la protección de los datos personales.
+
+## Autores
+
+**Proyecto:** UniSalud — Sistema Integral de Gestión de Atención Médica Universitaria.
+
+**Desarrolladores:**
+
+- Lesly Baltazar Alanoca
+- Daniel Tomas Cordova Juscamaita
+
+**Repositorio:** [Centro-Medico-UNI en GitHub](https://github.com/TerroncitoDev08/Centro-Medico-UNI)
+
+---
+
+*UniSalud es un proyecto académico en desarrollo orientado a mejorar la organización y el acceso a la atención médica universitaria.*
